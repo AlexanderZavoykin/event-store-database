@@ -55,6 +55,23 @@ class PostgreSQLEventStoreTest {
         assertThat(payloadValue).isEqualTo(orderAcceptedEvent)
     }
 
+    @Test
+    fun `fetch event records`() {
+        val orderAcceptedEvent = OrderAcceptedEvent()
+        val aggregateId = orderAcceptedEvent.getAggregateId()
+
+        val paymentConfirmedEvent = PaymentConfirmedEvent(customerId = aggregateId)
+
+        eventStore.append(orderAcceptedEvent)
+        eventStore.append(paymentConfirmedEvent)
+
+        val records = findRecordsByAggregateId(orderAcceptedEvent.getAggregateId())
+
+        assertThat(records).hasSize(2)
+        assertThat(records).anyMatch { it.version!! == 0L }
+        assertThat(records).anyMatch { it.version!! == 1L }
+    }
+
     private fun findRecordsByAggregateId(aggregateId: String): List<EventRecordRecord> =
         dslContext.selectFrom(EVENT_RECORD)
             .where(EVENT_RECORD.AGGREGATE_ID.eq(aggregateId))
