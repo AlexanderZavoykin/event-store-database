@@ -1,0 +1,14 @@
+{
+  "driverClassName": "org.postgresql.Driver",
+  "dataSourceUser": "event-store",
+  "dataSourcePassword": "event-store",
+  "jdbcUrl": "jdbc:postgresql://127.0.0.1:5432/event-store",
+  "maxLifetime": 900000,
+  "connectionTimeout": 30000,
+  "idleTimeout": 300000,
+  "maximumPoolSize": 50,
+  "minimumIdle": 5,
+  "poolName": "es",
+  "autoCommit": true,
+  "leakDetectionThreshold": 20000
+}

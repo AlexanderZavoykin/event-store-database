@@ -15,6 +15,7 @@ import practice.event.store.PostgreSQLEventStore
 import practice.event.store.config.DbConfig
 import practice.event.store.persistence.tables.records.EventRecordRecord
 import practice.event.store.persistence.tables.references.EVENT_RECORD
+import java.io.File
 import java.util.*
 import javax.sql.DataSource
 
@@ -26,13 +27,7 @@ class PostgreSQLEventStoreTest {
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     init {
-        val dbConfig = DbConfig(
-            driverClassName = "org.postgresql.Driver",
-            dataSourceUser = "event-store",
-            dataSourcePassword = "event-store",
-            jdbcUrl = "jdbc:postgresql://127.0.0.1:5432/event-store",
-            poolName = "es",
-        )
+        val dbConfig = objectMapper.readValue(File("src/test/resources/config.json"), DbConfig::class.java)
         val dataSource = dataSource(dbConfig)
         dslContext = dslContext(dataSource)
         eventStore = PostgreSQLEventStore(dataSource)
